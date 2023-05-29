@@ -1,7 +1,7 @@
 ### Hi there 👋
 
-[](https://raw.githubusercontent.com/EvanCoppa/guthub-stats/master/generated/languages.svg#gh-dark-mode-only)
-[](https://raw.githubusercontent.com/EvanCoppa/guthub-stats/master/generated/overview.svg#gh-dark-mode-only)
+![](https://raw.githubusercontent.com/EvanCoppa/guthub-stats/master/generated/languages.svg#gh-dark-mode-only)
+![](https://raw.githubusercontent.com/EvanCoppa/guthub-stats/master/generated/overview.svg#gh-dark-mode-only)
 
 <!--
 **EvanCoppa/evancoppa** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
