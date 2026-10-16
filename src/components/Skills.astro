@@ -1,0 +1,51 @@
+---
+import { skills, projectsShipped } from '../data/site';
+---
+
+<section class="overflow-hidden bg-ink py-[10vh] text-paper">
+  {
+    skills.map((skill, i) => (
+      <div class="overflow-hidden whitespace-nowrap">
+        <h2
+          data-parallax={i % 2 ? '1' : '-1'}
+          class:list={[
+            'inline-block text-[clamp(5rem,20vw,18rem)] leading-none font-bold tracking-[-0.05em] uppercase will-change-transform',
+            i % 2 && 'text-outline',
+          ]}
+        >
+          {skill}
+        </h2>
+      </div>
+    ))
+  }
+  <p class="px-[5vw] pt-[6vh] text-xl text-stone">
+    <span data-count={projectsShipped} class="font-bold text-accent">0</span>+ projects shipped
+  </p>
+</section>
+
+<script>
+  const rows = [...document.querySelectorAll<HTMLElement>('[data-parallax]')];
+  function parallax() {
+    for (const el of rows) {
+      const r = el.parentElement!.getBoundingClientRect();
+      const offset = (r.top - innerHeight / 2) * 0.3 * Number(el.dataset.parallax);
+      el.style.transform = `translateX(${Math.max(-400, Math.min(400, offset))}px)`;
+    }
+  }
+  addEventListener('scroll', parallax, { passive: true });
+  parallax();
+
+  const counter = document.querySelector<HTMLElement>('[data-count]')!;
+  new IntersectionObserver(([e], observer) => {
+    if (!e.isIntersecting) return;
+    observer.disconnect();
+    const end = Number(counter.dataset.count);
+    const t0 = performance.now();
+    const tick = (t: number) => {
+      const k = Math.min((t - t0) / 1200, 1);
+      counter.textContent = String(Math.round(end * k));
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }).observe(counter);
+</script>

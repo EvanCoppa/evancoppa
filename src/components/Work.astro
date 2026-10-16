@@ -1,0 +1,23 @@
+---
+import { work } from '../data/site';
+---
+
+<section class="bg-ink px-[5vw] py-[14vh] text-paper">
+  <h2 class="mb-12 text-[clamp(2.5rem,8vw,7rem)] leading-none font-bold tracking-[-0.04em]">Selected work</h2>
+  <div class="grid gap-10 md:grid-cols-3 md:gap-6">
+    {
+      work.map((w) => (
+        <a href="#" class="group block">
+          <div class="transition duration-500 group-hover:-translate-y-2">
+            <div class="mx-[5%] rounded-t-xl border-[6px] border-b-0 border-neutral-700 bg-neutral-700">
+              <div class:list={['aspect-[16/10] rounded-t-md bg-linear-135', w.gradient]} />
+            </div>
+            <div class="h-3 rounded-b-xl bg-neutral-500" />
+          </div>
+          <h3 class="mt-6 text-2xl font-bold">{w.title}</h3>
+          <p class="text-stone">{w.role}</p>
+        </a>
+      ))
+    }
+  </div>
+</section>

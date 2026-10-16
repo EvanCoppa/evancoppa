@@ -1,0 +1,21 @@
+---
+import { hero } from '../data/site';
+---
+
+<section class="flex min-h-screen flex-col justify-center px-[5vw] pt-[12vh] pb-[5vh]">
+  {
+    hero.map((line, i) => (
+      <h1
+        class:list={[
+          'animate-rise text-[clamp(3rem,11vw,10rem)] leading-[0.95] font-bold tracking-[-0.04em]',
+          line.align === 'right' ? 'text-right' : 'text-left',
+        ]}
+        style={`animation-delay: ${i * 0.1}s`}
+      >
+        {'text' in line && line.text}
+        {'text' in line && 'serif' in line && ' '}
+        {'serif' in line && <em class="font-serif font-normal">{line.serif}</em>}
+      </h1>
+    ))
+  }
+</section>

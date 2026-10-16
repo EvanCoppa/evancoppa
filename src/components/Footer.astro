@@ -1,0 +1,22 @@
+---
+import { site, socials } from '../data/site';
+---
+
+<footer id="contact" class="flex flex-col gap-7 bg-ink px-[5vw] pt-[16vh] pb-[5vh] text-paper">
+  <h2 class="text-[clamp(2.5rem,9vw,8rem)] leading-none font-bold tracking-[-0.04em]">
+    Let's work <em class="font-serif font-normal">together.</em>
+  </h2>
+  <a href={`mailto:${site.email}`} class="w-fit text-[clamp(1.2rem,3vw,2rem)] text-accent underline-offset-4 hover:underline">
+    {site.email}
+  </a>
+  <nav class="flex flex-wrap gap-x-9 gap-y-4 text-xl">
+    {
+      socials.map((s) => (
+        <a href={s.href} class="border-b border-transparent transition hover:border-paper">
+          {s.label}
+        </a>
+      ))
+    }
+  </nav>
+  <small class="text-neutral-500">© {new Date().getFullYear()} {site.name}</small>
+</footer>

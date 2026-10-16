@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Intro from '../components/Intro.astro';
+import Skills from '../components/Skills.astro';
+import Browser from '../components/Browser.astro';
+import Popups from '../components/Popups.astro';
+import Work from '../components/Work.astro';
+import Gallery from '../components/Gallery.astro';
+import Cv from '../components/Cv.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+---
+
+<Layout title={site.title} description={site.description}>
+  <Header />
+  <main>
+    <Hero />
+    <Intro />
+    <Skills />
+    <Browser />
+    <Popups />
+    <Work />
+    <Gallery />
+    <Cv />
+  </main>
+  <Footer />
+</Layout>

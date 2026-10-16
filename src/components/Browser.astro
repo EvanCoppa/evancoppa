@@ -1,0 +1,58 @@
+---
+import { browserTabs } from '../data/site';
+---
+
+<section class="bg-stone px-[5vw] py-[12vh]">
+  <div class="mx-auto max-w-5xl overflow-hidden rounded-2xl bg-paper shadow-[0_30px_80px_rgba(0,0,0,0.25)]">
+    <div role="tablist" class="flex gap-1 bg-neutral-300 px-2.5 pt-2.5">
+      {
+        browserTabs.map((tab, i) => (
+          <button
+            role="tab"
+            id={`tab-${tab.id}`}
+            aria-controls={`pane-${tab.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            data-tab={tab.id}
+            class="cursor-pointer rounded-t-xl bg-neutral-200 px-3 py-2.5 text-xs text-neutral-600 aria-selected:bg-paper aria-selected:font-medium aria-selected:text-ink sm:px-5 sm:text-sm"
+          >
+            {tab.label}
+          </button>
+        ))
+      }
+    </div>
+    <div class="flex items-center gap-2 border-b border-neutral-200 px-4 py-2.5">
+      <span class="size-3 rounded-full bg-stone"></span>
+      <span class="size-3 rounded-full bg-stone"></span>
+      <span class="size-3 rounded-full bg-stone"></span>
+      <span class="ml-3 flex-1 truncate rounded-full bg-neutral-100 px-3.5 py-1.5 text-sm text-neutral-500">
+        🔒 evancoppa.com/work
+      </span>
+    </div>
+    {
+      browserTabs.map((tab, i) => (
+        <div role="tabpanel" id={`pane-${tab.id}`} aria-labelledby={`tab-${tab.id}`} hidden={i !== 0}>
+          <div class:list={['bg-linear-135 px-5 py-16 text-paper sm:px-10 sm:py-24', tab.gradient]}>
+            <h2 class="text-[clamp(2rem,6vw,4rem)] font-bold tracking-[-0.03em]">{tab.label}</h2>
+            <p>{tab.subtitle}</p>
+          </div>
+          <ul class="flex flex-wrap gap-x-7 gap-y-3 px-5 py-5 font-medium sm:px-10">
+            {tab.menu.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('[data-tab]');
+  tabs.forEach((tab) =>
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => {
+        const selected = t === tab;
+        t.setAttribute('aria-selected', String(selected));
+        document.getElementById(`pane-${t.dataset.tab}`)!.hidden = !selected;
+      });
+    }),
+  );
+</script>

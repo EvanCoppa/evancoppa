@@ -1,0 +1,37 @@
+---
+import { bubbles } from '../data/site';
+---
+
+<section class="bg-stone px-[5vw] py-[12vh]">
+  <div class="mx-auto flex max-w-2xl flex-col gap-3.5">
+    {
+      bubbles.map((b) => (
+        <p
+          data-reveal
+          class:list={[
+            'w-fit max-w-[85%] rounded-3xl px-5.5 py-4 text-[clamp(1rem,2.2vw,1.4rem)] font-medium',
+            'translate-y-5 scale-95 opacity-0 transition duration-700 ease-out',
+            'data-in:translate-y-0 data-in:scale-100 data-in:opacity-100',
+            'motion-reduce:translate-y-0 motion-reduce:scale-100 motion-reduce:opacity-100',
+            b.side === 'right' ? 'self-end bg-ink text-paper' : 'bg-paper',
+          ]}
+        >
+          {b.text}
+        </p>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  const io = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        setTimeout(() => e.target.setAttribute('data-in', ''), 150);
+        io.unobserve(e.target);
+      }),
+    { threshold: 0.4 },
+  );
+  document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+</script>
