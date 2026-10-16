@@ -1,0 +1,100 @@
+---
+import { skills } from '../../data/site';
+import SkillInfo from './SkillInfo.astro';
+import Photo from './Photo.astro';
+import Video from './Video.astro';
+import Web from './Web.astro';
+import Ux from './Ux.astro';
+import Laptop from './Laptop.astro';
+
+const sub = 'relative flex w-full flex-col items-stretch justify-start md:flex-row md:items-center md:justify-between';
+---
+
+<section id="skills" data-skills class="relative flex w-full flex-col">
+  <!-- Sticky overlay: titles, gradients and progress counter (pointer-transparent) -->
+  <div class="pointer-events-none absolute inset-0 z-[5] flex flex-col">
+    <div class="sticky top-0 flex h-screen w-full flex-col md:block">
+      <div class="absolute inset-x-0 top-0 h-[20vh] bg-linear-to-b from-ink to-[rgba(12,12,18,0)] md:h-[22vh]"></div>
+      <div class="absolute inset-x-0 bottom-0 h-[20vh] bg-linear-to-t from-ink to-[rgba(12,12,18,0)]"></div>
+
+      <div class="relative flex h-[25vw] flex-col items-start overflow-hidden pl-5 sm:h-[20vw] md:absolute md:inset-x-0 md:top-0 md:h-auto md:pl-[50px]">
+        <!-- desktop: full titles in a 10vw mask -->
+        <div class="relative hidden h-[10vw] flex-none flex-col flex-nowrap items-start overflow-hidden md:flex">
+          {skills.map((s) => <h2 data-skill-title class="font-display relative flex h-full flex-none flex-col justify-center py-[1vw] text-[8vw] leading-none whitespace-nowrap text-mist">{s.title}</h2>)}
+        </div>
+        <!-- mobile: short titles -->
+        <div class="relative flex h-[24vw] flex-col items-start sm:h-[20vw] md:hidden">
+          {skills.map((s) => <h2 data-skill-title class="font-display relative flex h-full flex-none flex-col justify-center py-[2vw] text-[21vw] leading-none whitespace-nowrap text-mist sm:py-[1vw] sm:text-[18vw]">{s.short}</h2>)}
+        </div>
+      </div>
+
+      <div class="absolute inset-x-0 bottom-0 flex h-[100px] items-center justify-start md:pl-[35px]">
+        <div class="relative top-[3px] flex h-[30px] flex-col items-center justify-start overflow-hidden px-5 md:px-0">
+          {skills.map((_, i) => <span data-skill-count class="label relative block px-[15px] py-0 text-[18px] leading-[30px]">{i + 1}</span>)}
+        </div>
+        <div class="relative flex h-[2px] w-full items-center justify-center overflow-hidden rounded-[20px] md:mx-[15px] md:w-[150px]">
+          <span class="absolute inset-0 origin-left bg-mist/30"></span>
+          <span data-skill-bar class="absolute inset-0 origin-left scale-x-0 bg-mist"></span>
+        </div>
+        <span class="label relative top-[3px] block px-5 text-[18px] leading-[30px] md:px-[15px]">{skills.length}</span>
+      </div>
+    </div>
+  </div>
+
+  <div data-sub="photo" class:list={[sub, 'h-auto sm:h-[400vh] md:min-h-screen']}>
+    <Photo />
+    <SkillInfo skill={skills[0]} />
+  </div>
+  <div data-sub="video" class:list={[sub, 'h-[220vh] md:h-[150vh] md:min-h-screen']}>
+    <Video />
+    <SkillInfo skill={skills[1]} />
+  </div>
+  <div data-sub="web" class:list={[sub, 'h-[220vh] md:h-[150vh] md:min-h-screen']}>
+    <Web />
+    <SkillInfo skill={skills[2]} />
+  </div>
+  <div data-sub="ux" class:list={[sub, 'h-[300vh] md:min-h-screen']}>
+    <Ux />
+    <SkillInfo skill={skills[3]} />
+  </div>
+  <div data-sub="3d" class:list={[sub, 'h-[300vh] md:min-h-screen']}>
+    <Laptop />
+    <SkillInfo skill={skills[4]} class="mb-[100px] md:mb-0" />
+  </div>
+</section>
+
+<script>
+  import { scrollTimeline, type Track } from '../../scripts/ix';
+
+  const section = document.querySelector<HTMLElement>('[data-skills]')!;
+
+  // Title stack steps up one slot, the counter ticks, and the bar refills,
+  // at the scroll points where each sub-section hands over to the next.
+  function tracks(steps: Array<[number, number]>, barEnd: number): Track[] {
+    const titleFrames: Array<[number, number]> = [[0, 0]];
+    const countFrames: Array<[number, number]> = [[0, 0]];
+    const barFrames: Array<[number, number]> = [[0, 0]];
+    steps.forEach(([hold, next], i) => {
+      titleFrames.push([hold, -100 * i], [next, -100 * (i + 1)]);
+      countFrames.push([hold, -30 * i], [next, -30 * (i + 1)]);
+      barFrames.push([hold, 1], [hold + 1, 0], [next, 0]);
+    });
+    barFrames.push([barEnd, 1]);
+    return [
+      ['[data-skill-title]', 'y', titleFrames, '%'],
+      ['[data-skill-count]', 'y', countFrames],
+      ['[data-skill-bar]', 'sx', barFrames],
+    ];
+  }
+
+  scrollTimeline(
+    section,
+    { startsEntering: false, startsExiting: false, smoothing: 50, media: '(min-width: 768px)' },
+    tracks([[27, 31], [37, 42], [49, 54], [72, 77]], 93),
+  );
+  scrollTimeline(
+    section,
+    { startsEntering: false, startsExiting: false, smoothing: 50, media: '(max-width: 767px)' },
+    tracks([[37, 40], [50, 53], [62, 65], [79, 82]], 96),
+  );
+</script>

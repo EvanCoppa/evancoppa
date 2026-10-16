@@ -1,34 +1,91 @@
 @import "tailwindcss";
 
+/* Hide load-animated elements in their start state until the page has loaded. */
+@custom-variant loading (html.js:not(.loaded) &);
+
 @theme {
+  /* Webflow breakpoints: tiny <480, small <768, medium <992, main ≥992 */
+  --breakpoint-sm: 30rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 62rem;
+
   --color-ink: #0b0b0d;
-  --color-paper: #ffffff;
-  --color-stone: #cec9c9;
-  --color-accent: #f35555;
+  --color-ink-2: #0c0e12;
+  --color-mist: #cec9c9;
+  --color-blue-1: #3e7fff;
+  --color-blue-2: #50a8ff;
 
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --font-sans: "Albert Sans", Arial, sans-serif;
 
-  --animate-rise: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  --animate-pop: pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --ease-swing: cubic-bezier(0.18, 1.4, 0.4, 1);
 
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(40px); }
-    to { opacity: 1; transform: none; }
+  --animate-grain: grain 0.48s steps(1) infinite;
+  --animate-pulse-ring: pulse-ring 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+
+  @keyframes grain {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-200px, 0); }
+    50% { transform: translate(-200px, -200px); }
+    75% { transform: translate(0, -200px); }
   }
-  @keyframes pop {
-    from { opacity: 0; transform: scale(0.85) translateY(12px); }
-    to { opacity: 1; transform: none; }
+  @keyframes pulse-ring {
+    0%, 100% { transform: scale(0.8); }
+    50% { transform: scale(1); }
   }
 }
 
-@utility text-outline {
-  color: transparent;
-  -webkit-text-stroke: 2px currentColor;
-  -webkit-text-stroke-color: var(--color-paper);
+/* Display type: Fraunces at its largest optical size reads closest to the reference serif. */
+@utility font-display {
+  font-family: var(--font-display);
+  font-weight: 380;
+  font-variation-settings: "opsz" 144;
+  font-optical-sizing: none;
+}
+
+@utility copy {
+  font-size: 16px;
+  line-height: 28px;
+  letter-spacing: 0.02em;
+  color: var(--color-mist);
+  & p + p { margin-top: 28px; }
+}
+
+/* Uppercase UI label (menu items, counters, CTAs). */
+@utility label {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--color-mist);
+}
+
+@utility pill-blue {
+  background-image: linear-gradient(180deg, var(--color-blue-1), var(--color-blue-2));
+  box-shadow: 0 0 50px 2px rgba(103, 154, 204, 0.3);
+}
+
+@utility preserve-3d {
+  transform-style: preserve-3d;
+}
+
+@utility backface-hidden {
+  backface-visibility: hidden;
 }
 
 @layer base {
-  html { scroll-behavior: smooth; }
-  body { @apply bg-paper text-ink font-sans antialiased overflow-x-hidden; }
+  html {
+    background: var(--color-ink);
+  }
+  body {
+    @apply bg-ink font-sans text-[14px] leading-5 text-white antialiased;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: var(--color-blue-1);
+    color: #fff;
+  }
 }

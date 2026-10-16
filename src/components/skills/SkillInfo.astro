@@ -1,0 +1,23 @@
+---
+import type { Skill } from '../../data/site';
+
+interface Props {
+  skill: Skill;
+  class?: string;
+}
+const { skill, class: className = '' } = Astro.props;
+---
+
+<!-- Left 35% column (desktop) with a sticky, vertically centred text block; stacks under the visual on mobile. -->
+<div
+  class:list={[
+    'relative my-[75px] flex h-[65vh] w-full flex-row items-center justify-center px-0',
+    'md:absolute md:inset-y-0 md:left-0 md:my-0 md:h-full md:w-[35%] md:flex-col md:justify-start md:px-[50px]',
+    className,
+  ]}
+>
+  <div class="relative flex h-full w-4/5 flex-col items-start justify-center md:sticky md:top-0 md:h-screen md:w-full md:pt-[4vh]">
+    <p class="copy mb-10 md:mb-[75px]">{skill.text}</p>
+    {skill.tags.map((t) => <p class="font-display relative my-[7px] text-[22px] leading-none text-mist"><span class="opacity-30">#</span>{t}</p>)}
+  </div>
+</div>

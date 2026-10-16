@@ -1,0 +1,223 @@
+---
+import Scene from '../Scene.astro';
+import { browser } from '../../data/site';
+const { tabs, hero, second, gag } = browser;
+---
+
+<div class="relative h-full w-full md:absolute md:inset-y-0 md:right-0 md:w-[65%]">
+  <div class="sticky top-0 flex h-screen w-full flex-col items-center justify-around overflow-hidden perspective-[1000px]">
+    <div
+      data-browser
+      class="browser relative z-[1] mt-[50px] flex h-auto max-h-[500px] min-h-[450px] w-full flex-col overflow-hidden rounded-[10px_10px_12px_12px] bg-white shadow-[0_0_50px_-10px_rgba(206,201,201,0.2)] backface-hidden preserve-3d sm:h-[90%] sm:max-h-[600px] sm:min-h-0 sm:w-[90%] sm:max-w-[900px] md:min-h-[500px] md:min-w-[500px]"
+    >
+      <!-- Window chrome -->
+      <div class="flex h-10 w-full bg-[#eee]">
+        <div class="flex h-full w-[70px] flex-none items-center justify-around px-2.5 sm:w-20">
+          <span class="size-2.5 rounded-full bg-[#cacaca] sm:size-3"></span>
+          <span class="size-2.5 rounded-full bg-[#cacaca] sm:size-3"></span>
+          <span class="size-2.5 rounded-full bg-[#cacaca] sm:size-3"></span>
+        </div>
+      </div>
+      <div class="relative flex h-[37px] w-full items-center sm:h-10">
+        <div class="flex h-full w-[110px] flex-none items-center justify-around px-2.5 opacity-20" aria-hidden="true">
+          <svg viewBox="0 0 16 16" class="size-[13px] fill-none stroke-ink stroke-2"><path d="M10 3L5 8l5 5" /></svg>
+          <svg viewBox="0 0 16 16" class="size-[13px] fill-none stroke-ink stroke-2"><path d="M6 3l5 5-5 5" /></svg>
+          <svg viewBox="0 0 16 16" class="size-[13px] fill-none stroke-ink stroke-2"><path d="M13 8a5 5 0 11-1.5-3.5M13 2v3h-3" /></svg>
+        </div>
+        <div class="h-[30px] flex-1 rounded-[30px] bg-[#eee]"></div>
+        <button
+          type="button"
+          data-gag-toggle
+          aria-label="Toggle annoying pop-ups"
+          class="flex h-full w-[50px] flex-none cursor-pointer items-center justify-center grayscale-0 transition-all duration-150 ease-in-out hover:grayscale-50"
+        >
+          <span class="flex size-6 items-center justify-center rounded-[20px] bg-[#ff8c8c] text-[15px] leading-none">💩</span>
+        </button>
+      </div>
+
+      <!-- Pop-up layer (sits above the page, only its cards take pointer events) -->
+      <div data-gag class="pointer-events-none relative z-[999] flex h-full flex-col items-center justify-center overflow-hidden rounded-b-[12px]">
+        <div data-gag-notification class="group/notif pointer-events-auto absolute top-2.5 left-[25px] hidden h-[100px] w-[200px] flex-col items-start justify-around rounded-[3px] border border-[#dadada] bg-white px-[15px] py-2.5 shadow-[0_0_6px_0_rgba(0,0,0,0.15)] sm:left-[50px]">
+          <span class="relative text-[12px] text-ink">{gag.notification.lead}</span>
+          <span class="relative mb-3 text-[10px] leading-4 text-ink">{gag.notification.ask}</span>
+          <div class="relative flex w-full items-stretch justify-end gap-1">
+            <span class="relative flex h-[25px] w-[72px] items-center justify-center">
+              <button type="button" class="absolute w-[67px] rounded-[5px] border border-[#1c7eee] bg-white px-2.5 text-center text-[10px] leading-[25px] text-[#1a7dee] group-hover/notif:hidden">{gag.notification.block}</button>
+              <button type="button" class="absolute hidden w-[67px] rounded-[5px] border border-[#1c7eee] bg-white px-2.5 text-center text-[10px] leading-[25px] text-[#1a7dee] group-hover/notif:block">{gag.notification.allow}</button>
+            </span>
+            <span class="relative flex h-[25px] w-[72px] items-center justify-center">
+              <button type="button" class="absolute w-[67px] rounded-[5px] border border-[#1c7eee] bg-white px-2.5 text-center text-[10px] leading-[25px] text-[#1a7dee]">{gag.notification.allow}</button>
+            </span>
+          </div>
+        </div>
+
+        <div data-gag-cookies class="pointer-events-auto absolute inset-x-0 bottom-0 hidden h-20 w-full items-center justify-center bg-white p-[15px] shadow-[0_0_20px_0_rgba(0,0,0,0.3)]">
+          <p class="relative mr-2.5 pl-[15px] text-[8px] leading-[14px] text-ink sm:mr-[15px] sm:text-[10px] sm:leading-[18px]">{gag.cookies.text}</p>
+          <button type="button" class="ml-[5px] flex-none rounded-[5px] border-2 border-[#38c72e] bg-white px-2.5 text-[8px] leading-[30px] font-medium text-black uppercase sm:ml-2.5 sm:px-[15px] sm:py-[3px] sm:text-[10px]">{gag.cookies.accept}</button>
+          <button type="button" class="ml-[5px] flex-none rounded-[5px] border-2 border-[#f35555] bg-white px-2.5 text-[8px] leading-[30px] font-medium text-black uppercase sm:ml-2.5 sm:px-[15px] sm:py-[3px] sm:text-[10px]">{gag.cookies.acceptRed}</button>
+        </div>
+
+        <div data-gag-newsletter class="pointer-events-auto absolute hidden min-h-[250px] w-[70%] max-w-[400px] flex-col items-center justify-center rounded-[6px] border border-[#d8d8d8] bg-white px-[15px] shadow-[0_20px_20px_-13px_rgba(0,0,0,0.3)] md:w-[55%]">
+          <div data-flee class="absolute -top-[75px] -right-[75px] flex size-[150px] items-center justify-center">
+            <span data-flee-btn class="relative flex size-5 cursor-not-allowed items-center justify-center rounded-full border border-ink bg-white text-[13px] leading-none text-ink shadow-[0_0_3px_0_rgba(0,0,0,0.3)]">×</span>
+          </div>
+          <p class="relative mb-[7px] text-center text-[20px] leading-[1.1] font-medium whitespace-pre-line text-ink uppercase sm:text-[24px] lg:text-[30px]">{gag.newsletter.title}</p>
+          <p class="relative mb-3 text-center text-[10px] leading-[14px] whitespace-pre-line text-ink">{gag.newsletter.text}</p>
+          <span class="relative flex h-[35px] w-full items-center justify-center rounded-[5px] border border-black bg-white px-2.5 text-center text-[12px] leading-none text-black">{gag.newsletter.input}</span>
+        </div>
+      </div>
+
+      <!-- Tabs (cover the whole window; tab strip lines up with the chrome above) -->
+      <div class="pointer-events-none absolute flex h-full w-full flex-col items-start justify-start">
+        <div role="tablist" class="pointer-events-auto mt-[7px] ml-[70px] flex h-9 sm:ml-20">
+          {
+            tabs.map((t, i) => (
+              <button
+                type="button"
+                role="tab"
+                id={`btab-${i}`}
+                aria-controls={`bpane-${i}`}
+                aria-selected={i === 0 ? 'true' : 'false'}
+                data-btab={i}
+                class="tab relative flex h-full w-[120px] cursor-pointer items-center justify-start rounded-t-[10px] bg-[#eee]/0 px-3 transition-colors duration-100 ease-in-out hover:bg-white/50 aria-selected:bg-white sm:w-[150px] sm:px-[15px]"
+              >
+                <span class="pr-[5px] text-[12px] leading-none sm:text-[16px]">{t.favicon}</span>
+                <span class="text-[10px] leading-none text-[#222] sm:text-[11px]">{t.label}</span>
+              </button>
+            ))
+          }
+        </div>
+        <div class="h-full w-full">
+          {
+            tabs.map((t, i) => (
+              <div role="tabpanel" id={`bpane-${i}`} aria-labelledby={`btab-${i}`} hidden={i !== 0} class="relative h-full w-full">
+                <div class="relative left-[110px] flex h-[37px] w-fit items-center py-[5px] pl-[33px] sm:pl-[38px]">
+                  <svg viewBox="0 0 16 16" class="relative top-[2px] mx-3 w-2.5 fill-ink opacity-40 sm:top-0 sm:mr-3 sm:ml-[14px] sm:w-3"><path d="M4 7V5a4 4 0 018 0v2h1v8H3V7h1zm2 0h4V5a2 2 0 00-4 0v2z" /></svg>
+                  <span class="relative -top-px text-[10px] leading-none text-ink opacity-60 sm:top-0">{t.url}</span>
+                </div>
+                <div class="relative flex h-full w-full flex-col overflow-hidden rounded-b-[8px]">
+                  {i === 0 ? (
+                    <>
+                      <div class="absolute inset-x-0 top-0 z-[1] flex h-[50px] w-full items-center justify-between px-5 sm:h-[60px]">
+                        <svg viewBox="0 0 16 16" class="w-4 fill-none stroke-white stroke-2"><circle cx="7" cy="7" r="5" /><path d="M11 11l4 4" /></svg>
+                        <span class="font-display text-[22px] leading-none text-white">northwind</span>
+                        <svg viewBox="0 0 16 16" class="w-4 stroke-white stroke-2"><path d="M1 4h14M1 8h14M1 12h14" /></svg>
+                      </div>
+                      <div class="relative flex h-full w-full flex-col items-center justify-center">
+                        <Scene scene="ember" class="absolute inset-0 z-0 h-full w-full" />
+                        <div class="absolute inset-0 bg-black/40"></div>
+                        <h3 class="relative mt-0 mb-[30px] w-[85%] text-center text-[28px] leading-8 font-bold text-white sm:text-[36px] sm:leading-10 md:w-3/4">{hero.title}</h3>
+                        <span class="relative rounded-[5px] border border-white px-3 py-2 text-[11px] leading-none font-bold tracking-[1px] text-white uppercase">{hero.cta}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div class="absolute inset-x-0 top-0 z-[1] flex h-[60px] w-full items-center justify-between px-5">
+                        <span class="text-[14px] leading-none font-bold tracking-[2px] text-white uppercase">{second.logo}</span>
+                        <div class="flex">
+                          {second.links.map((l) => <span class="px-[5px] text-[10px] leading-none font-medium tracking-[2px] text-white uppercase sm:px-2.5 sm:text-[14px] sm:font-bold">{l}</span>)}
+                        </div>
+                      </div>
+                      <div class="relative flex h-full w-full flex-col items-center justify-center bg-black/20">
+                        <Scene scene="stars" class="absolute inset-0 -z-10 h-full w-full" />
+                        <span class="font-display text-[56px] leading-none text-white">{second.logo}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Inverse-radius feet on the active tab. */
+  .tab[aria-selected='true']::before,
+  .tab[aria-selected='true']::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 10px;
+    height: 10px;
+  }
+  .tab[aria-selected='true']::before {
+    left: -10px;
+    background: radial-gradient(circle at 0 0, transparent 10px, #fff 10.5px);
+  }
+  .tab[aria-selected='true']::after {
+    right: -10px;
+    background: radial-gradient(circle at 100% 0, transparent 10px, #fff 10.5px);
+  }
+  @media (max-width: 767px) {
+    .browser {
+      transform: rotateX(0deg) rotateY(-20deg) perspective(1500px);
+    }
+  }
+  @media (max-width: 479px) {
+    .browser {
+      transform: translate3d(0, 20px, -90px) rotateY(-20deg) perspective(1500px);
+    }
+  }
+</style>
+
+<script>
+  import { mouseTimeline } from '../../scripts/ix';
+
+  const root = document.querySelector<HTMLElement>('[data-browser]')!;
+
+  // Tabs
+  const tabs = root.querySelectorAll<HTMLButtonElement>('[data-btab]');
+  tabs.forEach((tab) =>
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        document.getElementById(`bpane-${t.dataset.btab}`)!.hidden = !on;
+      });
+    }),
+  );
+
+  // Pop-up gag: notification, then cookie bar, then a spinning newsletter.
+  const toggle = root.querySelector<HTMLElement>('[data-gag-toggle]')!;
+  const notif = root.querySelector<HTMLElement>('[data-gag-notification]')!;
+  const cookies = root.querySelector<HTMLElement>('[data-gag-cookies]')!;
+  const news = root.querySelector<HTMLElement>('[data-gag-newsletter]')!;
+  const timers: number[] = [];
+  const later = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
+  const anim = (el: HTMLElement, from: Keyframe, to: Keyframe, ms: number, easing: string) =>
+    el.animate([from, to], { duration: ms, easing, fill: 'both' });
+  const inOutCubic = 'cubic-bezier(0.645, 0.045, 0.355, 1)';
+  let on = false;
+
+  toggle.addEventListener('click', () => {
+    on = !on;
+    timers.splice(0).forEach(clearTimeout);
+    if (!on) {
+      toggle.style.filter = 'grayscale(0%)';
+      [notif, cookies, news].forEach((el) => (el.style.display = 'none'));
+      return;
+    }
+    toggle.style.filter = 'grayscale(100%)';
+    later(500, () => {
+      notif.style.display = 'flex';
+      anim(notif, { opacity: 0, transform: 'translateY(-30px)' }, { opacity: 1, transform: 'none' }, 300, inOutCubic);
+    });
+    later(2100, () => {
+      cookies.style.display = 'flex';
+      anim(cookies, { opacity: 0, transform: 'translateY(80px)' }, { opacity: 1, transform: 'none' }, 500, inOutCubic);
+    });
+    later(3600, () => {
+      news.style.display = 'flex';
+      anim(news, { transform: 'scale(.5) rotate(-360deg)' }, { transform: 'none' }, 2000, 'cubic-bezier(0.68, -0.55, 0.27, 1.55)');
+      news.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1000, easing: inOutCubic, fill: 'both' });
+    });
+  });
+
+  // The newsletter's close button dodges the cursor.
+  const flee = root.querySelector<HTMLElement>('[data-flee]')!;
+  mouseTimeline(flee, { smoothing: 80 }, [['[data-flee-btn]', 'x', [[0, 75], [100, -75]]]], [['[data-flee-btn]', 'y', [[0, 75], [100, -75]]]]);
+</script>

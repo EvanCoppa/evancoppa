@@ -1,0 +1,41 @@
+---
+import Scene from '../Scene.astro';
+import { photosDown, photosUp, type Scene as SceneName } from '../../data/site';
+
+const exif = (n: number) => [`EC-${String(n).padStart(2, '0')}`, ['f/2.8', 'f/4', 'f/8', 'f/1.8'][n % 4], ['1/250', '1/60', '1/1000', '1/30'][n % 4], `ISO ${[100, 200, 400, 800][n % 4]}`];
+const columns: Array<['down' | 'up', SceneName[]]> = [['down', photosDown], ['up', photosUp]];
+---
+
+<div class="relative h-full w-full md:absolute md:inset-y-0 md:right-0 md:w-[65%]">
+  <div class="relative flex h-auto w-full flex-col items-center justify-start overflow-hidden perspective-[1200px] sm:sticky sm:top-0 sm:h-screen sm:flex-row sm:items-start sm:justify-center">
+    {
+      columns.map(([dir, list], c) => (
+        <div data-col={dir} class:list={['flex flex-col items-stretch justify-start sm:mx-[25px]', dir === 'up' && 'sm:translate-y-[210px]']}>
+          {list.map((scene, i) => (
+            <div class:list={['relative my-[15px] h-[60vh] w-[80vw] flex-none sm:h-[322px] sm:w-[230px] md:my-[25px] md:h-[420px] md:w-[300px]', i === list.length - 1 && 'max-sm:hidden']}>
+              <Scene scene={scene} class="absolute inset-0 z-[1] h-full w-full rounded-[10px] sm:rounded-[15px]" alt="Photo placeholder" />
+              <Scene scene={scene} class="absolute inset-0 z-0 hidden h-full w-full rounded-[15px] opacity-[0.33] blur-[30px] md:block" />
+              <div class="absolute inset-y-0 -right-5 flex w-5 flex-col items-center justify-center" aria-hidden="true">
+                {exif(c * 5 + i + 1).map((t) => (
+                  <span class="relative my-5 rotate-90 text-[8px] leading-none tracking-[1px] whitespace-nowrap text-mist uppercase md:my-[35px]">{t}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))
+    }
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 hidden h-[20vh] bg-linear-to-t from-ink to-[rgba(12,12,18,0)] sm:block"></div>
+  </div>
+</div>
+
+<script>
+  import { scrollTimeline } from '../../scripts/ix';
+
+  const sub = document.querySelector<HTMLElement>('[data-sub="photo"]')!;
+  // The two columns counter-scroll past each other while the section is pinned.
+  scrollTimeline(sub, { startsEntering: true, smoothing: 85, media: '(min-width: 480px)' }, [
+    ['[data-col="down"]', 'y', [[0, -1880], [100, 705]]],
+    ['[data-col="up"]', 'y', [[0, 235], [100, -1880]]],
+  ]);
+</script>

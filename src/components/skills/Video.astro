@@ -1,0 +1,115 @@
+---
+import { video } from '../../data/site';
+const stickers = [
+  { t: video.stickers[0], c: 'top-[8%] left-[38%] -rotate-3' },
+  { t: video.stickers[1], c: 'top-[24%] left-[12%] -rotate-12' },
+  { t: video.stickers[2], c: 'top-[38%] right-[8%] rotate-6' },
+  { t: video.stickers[3], c: 'top-[58%] left-[10%] -rotate-[20deg]' },
+];
+---
+
+<div class="relative h-full w-full md:absolute md:inset-y-0 md:right-0 md:w-[65%]">
+  <div class="sticky top-0 flex h-screen w-full flex-col items-center justify-around overflow-hidden perspective-[1000px]">
+    <div data-video class="flex w-3/4 flex-col items-center justify-center md:w-auto">
+      <!-- Player: click to compare the edit against the raw footage -->
+      <button
+        type="button"
+        data-video-toggle
+        aria-label="Toggle raw footage"
+        class="relative z-[99] h-[330px] w-[264px] cursor-pointer overflow-hidden rounded-[15px] shadow-[0_0_50px_0_rgba(206,201,201,0.2)] sm:h-[365px] sm:w-[292px] md:h-[400px] md:w-[320px]"
+      >
+        <div class="clip absolute inset-0 rounded-[15px]">
+          <div class="clip-pan absolute -inset-[8%]"></div>
+          {stickers.map((s) => <span class:list={['absolute bg-white px-1.5 py-1 text-[6px] leading-none font-bold tracking-[1px] text-ink uppercase shadow', s.c]}>{s.t}</span>)}
+        </div>
+        <div data-raw class="clip raw absolute inset-0 rounded-[15px] opacity-0">
+          <div class="clip-pan absolute -inset-[8%]"></div>
+        </div>
+      </button>
+
+      <!-- Editor UI -->
+      <div class="relative mt-2.5 flex w-[90%] flex-col items-stretch justify-center pt-[15px] sm:w-full">
+        <div data-video-progress class="relative mt-0 mb-2 flex w-full items-center justify-between sm:my-[15px]">
+          <div class="absolute inset-x-[-10px] top-0 flex justify-between">
+            <span class="relative -top-[15px] mr-2 text-center text-[8px] leading-[18px] font-medium text-mist sm:-top-5">00:00</span>
+            <span class="relative -top-[15px] mr-2 text-center text-[8px] leading-[18px] font-medium text-mist sm:-top-5">00:06</span>
+          </div>
+          <span class="absolute flex h-[2px] w-full origin-left items-center rounded-[20px] bg-white/30"></span>
+          <span class="progress-front absolute h-[2px] w-full origin-left scale-x-0 rounded-[20px] bg-white shadow-[0_0_30px_0_rgba(255,255,255,0.42)]"></span>
+          <span class="progress-head w-full">
+            <span class="relative -left-2 z-[1] block size-[14px] rounded-full border-2 border-ink bg-linear-to-r from-[#3f80ff] to-[#50a8ff] shadow-[0_0_30px_0_rgba(62,127,255,0.5)]"></span>
+          </span>
+        </div>
+
+        <div class="relative mb-[5px] flex h-[33px] w-full items-center sm:h-10">
+          <button type="button" data-video-toggle aria-label="Toggle edit layer" class="absolute inset-y-0 -left-[50px] flex w-[50px] cursor-pointer items-center justify-center px-2.5 sm:-left-[60px] sm:w-[60px]">
+            <svg data-eye="on" viewBox="0 0 24 24" class="size-4 fill-none stroke-mist stroke-2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" /><circle cx="12" cy="12" r="3" /></svg>
+            <svg data-eye="off" viewBox="0 0 24 24" class="hidden size-4 fill-none stroke-mist stroke-2"><path d="M1 12s4-7 11-7c2.2 0 4.1.7 5.7 1.7M23 12s-4 7-11 7c-2.2 0-4.1-.7-5.7-1.7" /><path d="M3 3l18 18" /></svg>
+          </button>
+          <div class="relative flex h-full w-full items-center rounded-[10px] bg-linear-135 from-[#3f80ff] to-[#50a8ff] px-2.5 shadow-[0_0_30px_0_rgba(62,127,255,0.5)] sm:px-[15px]">
+            <span class="absolute pt-[3px] text-left text-[10px] leading-none text-white">{video.layers[0]}</span>
+          </div>
+        </div>
+        <div class="relative mb-[5px] flex h-[33px] w-full items-center sm:h-10">
+          <span class="absolute inset-y-0 -left-[50px] flex w-[50px] cursor-not-allowed items-center justify-center px-2.5 sm:-left-[60px] sm:w-[60px]">
+            <svg viewBox="0 0 24 24" class="size-4 fill-white opacity-30"><path d="M7 10V7a5 5 0 0110 0v3h1a1 1 0 011 1v10a1 1 0 01-1 1H6a1 1 0 01-1-1V11a1 1 0 011-1h1zm2 0h6V7a3 3 0 00-6 0v3z" /></svg>
+          </span>
+          <div class="relative flex h-full w-full items-center rounded-[10px] bg-linear-135 from-[#3f80ff] to-[#50a8ff] px-2.5 shadow-[0_0_30px_0_rgba(62,127,255,0.5)] sm:px-[15px]">
+            <span class="absolute pt-[3px] text-left text-[10px] leading-none text-white">{video.layers[1]}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* A placeholder "clip": slow Ken Burns pan over a dusk scene. The raw layer is the same shot, flat and desaturated. */
+  .clip-pan {
+    background:
+      radial-gradient(35% 25% at 62% 38%, rgba(255, 196, 120, 0.95), rgba(255, 120, 80, 0.4) 50%, transparent 75%),
+      radial-gradient(60% 30% at 20% 20%, rgba(120, 160, 255, 0.5), transparent 70%),
+      linear-gradient(180deg, #1d2440 0%, #6d4a6e 38%, #e08a64 52%, #2a2230 60%, #12121a 100%);
+    animation: pan 12s ease-in-out infinite alternate;
+  }
+  .raw .clip-pan {
+    filter: saturate(0.2) contrast(0.7) brightness(1.25);
+  }
+  @keyframes pan {
+    from { transform: scale(1) translate(0, 0); }
+    to { transform: scale(1.12) translate(-3%, 2%); }
+  }
+  .playing .progress-front {
+    animation: fill 6s linear infinite;
+  }
+  .playing .progress-head {
+    animation: head 6s linear infinite;
+  }
+  .progress-front, .progress-head {
+    transition: transform 0.5s;
+  }
+  @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes head { from { transform: translateX(0); } to { transform: translateX(100%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .clip-pan, .playing .progress-front, .playing .progress-head { animation: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-video]')!;
+  const raw = root.querySelector<HTMLElement>('[data-raw]')!;
+  const eyeOn = root.querySelector('[data-eye="on"]')!;
+  const eyeOff = root.querySelector('[data-eye="off"]')!;
+  let showRaw = false;
+  root.querySelectorAll('[data-video-toggle]').forEach((b) =>
+    b.addEventListener('click', () => {
+      showRaw = !showRaw;
+      raw.style.opacity = showRaw ? '1' : '0';
+      eyeOn.classList.toggle('hidden', showRaw);
+      eyeOff.classList.toggle('hidden', !showRaw);
+    }),
+  );
+  // Timeline plays while the player is on screen and rewinds when it leaves.
+  const progress = root.querySelector('[data-video-progress]')!;
+  new IntersectionObserver(([e]) => progress.classList.toggle('playing', e.isIntersecting)).observe(progress);
+</script>

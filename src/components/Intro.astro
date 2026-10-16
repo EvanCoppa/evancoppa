@@ -1,37 +1,53 @@
 ---
-import { bubbles } from '../data/site';
+import { intro, question, bubbles, answer } from '../data/site';
 ---
 
-<section class="bg-stone px-[5vw] py-[12vh]">
-  <div class="mx-auto flex max-w-2xl flex-col gap-3.5">
-    {
-      bubbles.map((b) => (
-        <p
-          data-reveal
-          class:list={[
-            'w-fit max-w-[85%] rounded-3xl px-5.5 py-4 text-[clamp(1rem,2.2vw,1.4rem)] font-medium',
-            'translate-y-5 scale-95 opacity-0 transition duration-700 ease-out',
-            'data-in:translate-y-0 data-in:scale-100 data-in:opacity-100',
-            'motion-reduce:translate-y-0 motion-reduce:scale-100 motion-reduce:opacity-100',
-            b.side === 'right' ? 'self-end bg-ink text-paper' : 'bg-paper',
-          ]}
-        >
-          {b.text}
-        </p>
-      ))
-    }
+<section class="relative mx-auto flex max-w-[1800px] flex-col items-center justify-center overflow-hidden pb-[10vh] md:overflow-visible md:pt-[10vh]">
+  <div class="my-[100px] w-4/5 max-w-[500px] md:my-[150px] md:w-[45vw] lg:w-[35vw]">
+    <p class="copy">{intro}</p>
+  </div>
+
+  <div data-chat class="relative my-[50px] flex w-full flex-col items-center justify-center text-center perspective-[1200px] md:w-[65vw] lg:w-[50vw]">
+    <div class="absolute flex flex-col items-center justify-center">
+      {
+        bubbles.map((text, i) => (
+          <p
+            data-bubble={i + 1}
+            class="pill-blue relative z-[1] rounded-[30px] px-4 py-3.5 text-[12px] leading-none font-normal whitespace-nowrap text-white sm:px-[18px] sm:py-4 sm:text-[14px] md:p-5"
+          >
+            {text}
+          </p>
+        ))
+      }
+    </div>
+    <h2 class="font-display relative text-[20vw] leading-[1.2] text-mist sm:text-[16vw] md:text-[12vw] md:leading-[1.1] lg:text-[6vw] lg:leading-none">
+      {question.map((line, i) => (<>{line}{i < question.length - 1 && <br />}</>))}
+    </h2>
+  </div>
+
+  <div class="my-[100px] w-4/5 max-w-[500px] md:my-[150px] md:w-[45vw] lg:w-[35vw]">
+    <div class="copy">{answer.map((p) => <p>{p}</p>)}</div>
   </div>
 </section>
 
 <script>
-  const io = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((e) => {
-        if (!e.isIntersecting) return;
-        setTimeout(() => e.target.setAttribute('data-in', ''), 150);
-        io.unobserve(e.target);
-      }),
-    { threshold: 0.4 },
-  );
-  document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+  import { scrollTimeline, type Track } from '../scripts/ix';
+
+  const chat = document.querySelector<HTMLElement>('[data-chat]')!;
+  // Each bubble drifts outward and spins as the question scrolls through the viewport.
+  const paths: Array<[number, [number, number], [number, number], [number, number]]> = [
+    [1, [-135, -325], [13, -150], [-13, -43]],
+    [2, [178, 265], [-30, -222], [3, 39]],
+    [3, [-170, -483], [22, 30], [-10, 33]],
+    [4, [274, 439], [-30, -200], [10, -56]],
+    [5, [13, 448], [22, 30], [-7, 65]],
+  ];
+  const tracks: Track[] = paths.flatMap(([n, x, y, rz]) => [
+    [`[data-bubble="${n}"]`, 'x', [[0, x[0]], [100, x[1]]]],
+    [`[data-bubble="${n}"]`, 'y', [[0, y[0]], [100, y[1]]]],
+    [`[data-bubble="${n}"]`, 'rz', [[0, rz[0]], [100, rz[1]]]],
+  ] as Track[]);
+
+  scrollTimeline(chat, { startsEntering: true, startOffset: 50, startsExiting: true, endOffset: 50, smoothing: 80, media: '(min-width: 768px)' }, tracks);
+  scrollTimeline(chat, { startsEntering: true, startOffset: 25, startsExiting: false, endOffset: 50, smoothing: 86, media: '(max-width: 767px)' }, tracks);
 </script>

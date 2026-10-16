@@ -1,0 +1,27 @@
+---
+// Uppercase link with an underline that sweeps out and back in on hover.
+interface Props {
+  href: string;
+  download?: boolean;
+}
+const { href, download } = Astro.props;
+---
+
+<a href={href} download={download} class="group/cta relative mt-5 flex flex-col items-center justify-center overflow-hidden">
+  <span class="label relative flex items-center justify-center pb-[2px] leading-[26px]"><slot /></span>
+  <span class="relative h-[2px] w-full overflow-hidden rounded-[3px]">
+    <span class="cta-bar absolute inset-0 bg-mist"></span>
+  </span>
+</a>
+
+<style>
+  .group\/cta:hover .cta-bar {
+    animation: cta-sweep 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  @keyframes cta-sweep {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(101%); }
+    50.01% { transform: translateX(-101%); }
+    100% { transform: translateX(0); }
+  }
+</style>

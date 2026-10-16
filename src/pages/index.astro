@@ -1,29 +1,30 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
-import Hero from '../components/Hero.astro';
 import Intro from '../components/Intro.astro';
-import Skills from '../components/Skills.astro';
-import Browser from '../components/Browser.astro';
-import Popups from '../components/Popups.astro';
-import Work from '../components/Work.astro';
-import Gallery from '../components/Gallery.astro';
+import Skills from '../components/skills/Skills.astro';
+import Next from '../components/Next.astro';
+import CaseStudy from '../components/CaseStudy.astro';
+import Copy from '../components/Copy.astro';
 import Cv from '../components/Cv.astro';
 import Footer from '../components/Footer.astro';
-import { site } from '../data/site';
+import { site, breaks } from '../data/site';
 ---
 
 <Layout title={site.title} description={site.description}>
-  <Header />
-  <main>
-    <Hero />
+  <main class="flex flex-col items-center">
+    <Header />
     <Intro />
     <Skills />
-    <Browser />
-    <Popups />
-    <Work />
-    <Gallery />
+    <Next />
+    <CaseStudy />
+    <section class="relative mx-auto flex max-w-[1800px] flex-col items-center justify-center py-[10vh]">
+      <Copy paragraphs={breaks.pitch} tight />
+    </section>
     <Cv />
+    <section class="relative mx-auto flex max-w-[1800px] flex-col items-center justify-center pt-[10vh]">
+      <Copy paragraphs={breaks.outro} tight />
+    </section>
+    <Footer />
   </main>
-  <Footer />
 </Layout>
