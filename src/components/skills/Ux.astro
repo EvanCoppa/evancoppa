@@ -1,0 +1,101 @@
+---
+import Scene from '../Scene.astro';
+import { ux } from '../../data/site';
+---
+
+<div class="relative h-full w-full md:absolute md:inset-y-0 md:right-0 md:w-[65%]">
+  <div class="sticky top-0 flex h-screen w-full flex-col items-center justify-around overflow-hidden perspective-[1000px] md:perspective-[1500px]">
+    <!-- Phone card: tilts flat while wireframe layers wipe away to the final design -->
+    <div
+      data-ux
+      class="ux relative top-[25px] flex h-[528px] w-[297px] flex-col items-center justify-start rounded-[12px] bg-white shadow-[0_0_50px_0_rgba(255,255,255,0.2)] preserve-3d sm:top-0"
+    >
+      <div class="absolute inset-x-0 -top-6 flex h-5 w-full flex-col overflow-hidden">
+        {ux.label.map((l) => <p data-ux-label class="relative text-[8px] leading-6 font-medium tracking-[1px] text-mist uppercase">Project — {l}</p>)}
+      </div>
+
+      <div data-ux-menu class="absolute inset-x-0 top-0 z-[3] flex h-[50px] w-full items-start justify-between overflow-hidden rounded-[10px] bg-white">
+        <div class="relative flex h-[100px] w-full flex-col items-stretch justify-start px-[15px]">
+          <div data-ux-menu-row class="relative flex h-[50px] w-full flex-none flex-row items-center justify-between overflow-hidden">
+            {ux.menu.map((m, i) => <span class:list={['flex w-1/3 text-[14px] leading-none font-medium text-ink', i === 0 ? 'justify-start' : i === 1 ? 'justify-center' : 'justify-end']}>{m}</span>)}
+          </div>
+          <div data-ux-menu-row class="relative flex h-[50px] w-full flex-none flex-row items-center justify-between overflow-hidden">
+            <svg viewBox="0 0 16 16" class="w-4 fill-none stroke-white stroke-2"><circle cx="7" cy="7" r="5" /><path d="M11 11l4 4" /></svg>
+            <span class="font-display text-[20px] leading-none text-white">northwind</span>
+            <svg viewBox="0 0 16 16" class="w-4 stroke-white stroke-2"><path d="M1 4h14M1 8h14M1 12h14" /></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="absolute inset-x-0 top-0 z-[2] flex h-[70%] w-full flex-col items-center justify-start overflow-hidden rounded-t-[12px]">
+        <div class="absolute flex h-[200%] w-full flex-col items-center">
+          <div data-ux-hero-bg class="relative h-1/2 w-full origin-top bg-[grey]"></div>
+          <div data-ux-hero-bg class="relative h-1/2 w-full origin-top">
+            <Scene scene="ember" class="absolute inset-0 h-full w-full" />
+            <div class="absolute inset-0 bg-black/60"></div>
+          </div>
+        </div>
+        <div class="relative flex h-full w-full flex-col items-center justify-center">
+          <div class="relative mt-[50px] mb-[25px] flex h-[60px] w-[85%] flex-col overflow-hidden">
+            <p data-ux-title class="h-[60px] flex-none text-center text-[24px] leading-[30px] font-bold text-white italic">{ux.wire.title}</p>
+            <p data-ux-title class="h-[60px] flex-none text-center text-[24px] leading-[30px] font-bold text-white">{ux.final.title}</p>
+          </div>
+          <div class="relative flex h-8 flex-col items-center justify-start overflow-hidden rounded-[8px] border border-white bg-ink/15 px-3 py-1">
+            <span data-ux-cta class="h-[22px] flex-none text-[11px] leading-[22px] font-bold tracking-[1px] text-white uppercase">{ux.wire.cta}</span>
+            <span data-ux-cta class="h-[22px] flex-none text-[11px] leading-[22px] font-bold tracking-[1px] text-white uppercase">{ux.final.cta}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="absolute flex h-full w-full flex-col justify-end">
+        <div class="relative flex h-[30%] w-full flex-col px-[15px] pt-[15px]">
+          <div class="relative mb-2.5 flex h-10 flex-col items-stretch overflow-hidden">
+            <p data-ux-section class="relative h-[30px] flex-none text-left text-[24px] leading-[30px] font-bold text-ink italic">{ux.wire.section}</p>
+            <p data-ux-section class="relative h-[30px] flex-none text-left text-[24px] leading-[30px] font-bold text-ink">{ux.final.section}</p>
+          </div>
+          <div class="relative flex h-full flex-col overflow-hidden rounded-t-[10px]">
+            <div data-ux-image class="relative h-full flex-none bg-[grey]"></div>
+            <div data-ux-image class="relative h-full flex-none"><Scene scene="lake" class="h-full w-full" /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @media (max-width: 767px) {
+    .ux { translate: 0 0 -150px; }
+  }
+  @media (max-width: 479px) {
+    .ux { translate: none; scale: 0.9; }
+  }
+</style>
+
+<script>
+  import { scrollTimeline, type Track } from '../../scripts/ix';
+
+  const sub = document.querySelector<HTMLElement>('[data-sub="ux"]')!;
+  const tracks: Track[] = [
+    ['[data-ux]', 'rx', [[0, 35], [80, 20], [90, 20], [100, 0]]],
+    ['[data-ux]', 'ry', [[0, -35], [80, -20], [90, -20], [100, 0]]],
+    ['[data-ux]', 'rz', [[0, 25], [80, 10], [90, 10], [100, 0]]],
+    ['[data-ux-menu-row]', 'y', [[0, 0], [20, -50]]],
+    ['[data-ux-menu]', 'bgA', [[0, 1], [20, 0]]],
+    ['[data-ux-menu]', 'z', [[0, 0], [50, 15], [60, 0]]],
+    ['[data-ux-hero-bg]', 'y', [[30, 0], [50, -100]], '%'],
+    ['[data-ux-title]', 'y', [[30, 0], [50, -60]]],
+    ['[data-ux-cta]', 'y', [[30, 0], [50, -20]]],
+    ['[data-ux-section]', 'y', [[60, 0], [80, -30]]],
+    ['[data-ux-image]', 'y', [[60, 0], [80, -100]], '%'],
+    ['[data-ux-label]', 'y', [[90, 0], [100, -24]]],
+  ];
+  // Desktop: progress runs from the section pinning until it is half scrolled.
+  scrollTimeline(sub, { startsEntering: false, startsExiting: true, endOffset: 50, smoothing: 80, media: '(min-width: 768px)' }, tracks);
+  // Mobile: a later, shorter window, with the card held at 85%.
+  scrollTimeline(
+    sub,
+    { startsEntering: true, startOffset: 25, startsExiting: false, endOffset: 75, smoothing: 80, media: '(max-width: 767px)' },
+    [...tracks, ['[data-ux]', 's', [[0, 0.85], [100, 0.85]]]],
+  );
+</script>

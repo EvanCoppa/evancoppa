@@ -1,0 +1,55 @@
+---
+import Scene from './Scene.astro';
+import Cta from './Cta.astro';
+import { breaks, caseCards } from '../data/site';
+
+const rows = [caseCards.slice(0, 4), caseCards.slice(4, 8), caseCards.slice(8, 12)];
+// portrait / landscape pattern per row (matches a staggered photo grid)
+const landscape = [
+  [false, true, false, true],
+  [true, false, true, false],
+  [false, true, false, true],
+];
+---
+
+<section data-case class="relative mx-auto flex h-screen w-full max-w-[1800px] items-center justify-center">
+  <div class="relative flex h-full w-full items-start justify-center overflow-hidden perspective-[1000px] md:items-center">
+    <div class="relative flex h-full w-full flex-none items-center justify-center overflow-hidden md:h-[550px] md:w-[60%]" style="transform: perspective(1000px)">
+      <div data-case-grid class="flex h-[120vh] w-[120vw] flex-none flex-wrap content-center items-center justify-center">
+        {
+          rows.map((row, r) => (
+            <div class="flex flex-none items-center justify-center">
+              {row.map((scene, i) => (
+                <div
+                  class:list={[
+                    'relative m-[5px] flex h-[225px] flex-none items-center justify-center overflow-hidden bg-ink-2 opacity-50 brightness-[70%] grayscale md:m-[15px] md:h-[325px]',
+                    landscape[r][i] ? 'w-[237px] md:w-[406px]' : 'w-[180px] md:w-[260px]',
+                  ]}
+                >
+                  <Scene scene={scene} class="case-img relative -m-[25px] h-[calc(100%+50px)] w-[calc(100%+50px)] flex-none" />
+                </div>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+  <div class="absolute inset-0 flex flex-col items-center justify-center">
+    <h2 class="font-display relative text-[30vw] leading-none text-mist sm:text-[22vw] md:text-[10vw] lg:text-[8vw]">{breaks.project.name}</h2>
+    <Cta href={breaks.project.href}>{breaks.project.cta}</Cta>
+  </div>
+</section>
+
+<script>
+  import { mouseTimeline } from '../scripts/ix';
+
+  const section = document.querySelector<HTMLElement>('[data-case]')!;
+  // The grid drifts against the cursor while each image counter-drifts inside its frame.
+  mouseTimeline(
+    section,
+    { smoothing: 97, media: '(min-width: 768px)' },
+    [['[data-case-grid]', 'x', [[0, 200], [100, -200]]], ['.case-img', 'x', [[0, -25], [100, 25]]]],
+    [['[data-case-grid]', 'y', [[0, 260], [100, -260]]], ['.case-img', 'y', [[0, -25], [100, 25]]]],
+  );
+</script>

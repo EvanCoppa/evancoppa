@@ -1,0 +1,105 @@
+---
+import Portrait from './Portrait.astro';
+import { menu, hero, heroMobile } from '../data/site';
+---
+
+<header id="top" data-hero class="relative mx-auto flex h-screen w-full max-w-[1800px] flex-col items-center justify-center overflow-hidden perspective-[1000px]">
+  <!-- Menu -->
+  <nav
+    class="absolute inset-x-0 top-0 z-[1] flex h-[75px] items-center justify-between px-0 transition-transform duration-[1250ms] ease-in-out-quart delay-[10ms] sm:px-[15px] md:px-[35px] loading:-translate-y-[75px]"
+  >
+    <span class="label p-2.5 whitespace-nowrap sm:p-[15px]">{menu.left}</span>
+    <div class="group/lang relative flex items-center justify-end">
+      <a href={menu.links[0].href} class="label p-2.5 sm:p-[15px]">{menu.links[0].label}</a>
+      <span class="relative flex h-[2px] w-[30px] overflow-hidden sm:w-[50px]" aria-hidden="true">
+        <span class="absolute inset-0 bg-mist/30"></span>
+        <span class="relative h-full w-1/2 bg-mist transition-transform duration-300 ease-swing group-has-[a:last-child:hover]/lang:translate-x-full"></span>
+      </span>
+      <a href={menu.links[1].href} class="label p-2.5 sm:p-[15px]">{menu.links[1].label}</a>
+    </div>
+  </nav>
+
+  <!-- Portrait: drops in and settles on load; alternate shot shows on hover -->
+  <div class="transition-[translate,opacity] duration-[1250ms] ease-in-out-quart delay-[10ms] loading:-translate-y-[75px] loading:opacity-0">
+    <div
+      data-hero-photo
+      class="group/photo relative isolate h-[55vh] w-[70vw] overflow-hidden transition-[scale] delay-[1590ms] duration-500 ease-swing sm:w-[42vh] md:h-[69vh] md:w-[45vh] loading:scale-110"
+    >
+      <Portrait variant="back" class="absolute inset-0 brightness-75" />
+      <div class="hero-front absolute inset-0 z-20 opacity-0 transition-opacity duration-200 ease-in-out group-hover/photo:opacity-100">
+        <Portrait variant="front" class="brightness-75" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Title lines -->
+  <div class="pointer-events-none absolute flex h-screen w-full flex-col items-center justify-center">
+    {
+      hero.map((line, i) => (
+        <div
+          class="relative hidden items-center justify-center transition-opacity duration-700 ease-in-out-quart lg:flex loading:opacity-0"
+          style={`transition-delay:${i * 150}ms`}
+        >
+          <h1 data-line={['top', 'mid', 'bot'][i]} class="font-display relative text-center text-[9vw] leading-[0.9] whitespace-nowrap text-mist">
+            {line}
+          </h1>
+        </div>
+      ))
+    }
+    {
+      heroMobile.map((line, i) => (
+        <p
+          aria-hidden="true"
+          data-dir={i % 2 ? 'left' : 'right'}
+          class="font-display relative text-center text-[21vw] leading-none whitespace-nowrap text-mist sm:text-[20vw] sm:leading-[0.9] md:text-[18vw] lg:hidden"
+        >
+          {line}
+        </p>
+      ))
+    }
+  </div>
+</header>
+
+<style>
+  /* On load the alternate portrait shows first, then cross-fades to the main one. */
+  :global(html.loaded) .hero-front {
+    animation: front-intro 2.1s cubic-bezier(0.77, 0, 0.175, 1) both;
+  }
+  :global(html.loaded) .hero-front:hover {
+    animation: none;
+  }
+  @keyframes front-intro {
+    0% { opacity: 0; }
+    60% { opacity: 1; }
+    76% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+</style>
+
+<script>
+  import { scrollTimeline } from '../scripts/ix';
+
+  const hero = document.querySelector<HTMLElement>('[data-hero]')!;
+  // Desktop: lines fade out and rise in a staggered cascade over the first 40% of the header.
+  scrollTimeline(
+    hero,
+    { startsEntering: false, startsExiting: false, smoothing: 80, media: '(min-width: 992px)' },
+    [
+      ['[data-line="top"]', 'o', [[0, 1], [20, 0]]],
+      ['[data-line="top"]', 'y', [[0, 0], [20, -50]]],
+      ['[data-line="mid"]', 'o', [[10, 1], [30, 0]]],
+      ['[data-line="mid"]', 'y', [[10, 0], [30, -50]]],
+      ['[data-line="bot"]', 'o', [[20, 1], [40, 0]]],
+      ['[data-line="bot"]', 'y', [[20, 0], [40, -50]]],
+    ],
+  );
+  // Tablet / mobile: alternate lines slide apart horizontally.
+  scrollTimeline(
+    hero,
+    { startsEntering: false, startsExiting: false, smoothing: 80, media: '(max-width: 991px)' },
+    [
+      ['[data-dir="left"]', 'x', [[0, 0], [100, 300]]],
+      ['[data-dir="right"]', 'x', [[0, 0], [100, -300]]],
+    ],
+  );
+</script>

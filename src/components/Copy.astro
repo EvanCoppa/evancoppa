@@ -1,0 +1,12 @@
+---
+// Narrow centred copy column used between sections.
+interface Props {
+  paragraphs: string[];
+  tight?: boolean;
+}
+const { paragraphs, tight = false } = Astro.props;
+---
+
+<div class:list={['w-[75vw] max-w-[500px] md:w-[45vw] lg:w-[35vw]', tight ? 'my-[100px]' : 'my-[100px] md:my-[150px]', !tight && 'w-4/5']}>
+  <div class="copy">{paragraphs.map((p) => <p class="whitespace-pre-line">{p}</p>)}</div>
+</div>

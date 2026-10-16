@@ -1,0 +1,44 @@
+---
+// Placeholder portrait (head-and-shoulders silhouette). Pass `image` to use a real photo.
+interface Props {
+  variant?: 'back' | 'front';
+  image?: string;
+  class?: string;
+}
+const { variant = 'back', image, class: className = '' } = Astro.props;
+const light = variant === 'front' ? '#8d8a8a' : '#5e5c5d';
+const glow = variant === 'front' ? 'rgba(255,255,255,.22)' : 'rgba(255,255,255,.12)';
+const id = `p-${variant}`;
+---
+
+{
+  image ? (
+    <img src={image} alt="Portrait of Evan" class:list={['h-full w-full object-cover', className]} />
+  ) : (
+    <svg viewBox="0 0 300 460" preserveAspectRatio="xMidYMid slice" class:list={['h-full w-full', className]} role="img" aria-label="Portrait placeholder">
+      <defs>
+        <linearGradient id={`${id}-bg`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#26272b" />
+          <stop offset="1" stop-color="#0d0e11" />
+        </linearGradient>
+        <radialGradient id={`${id}-glow`} cx={variant === 'front' ? '0.7' : '0.3'} cy="0.25" r="0.6">
+          <stop offset="0" stop-color={glow} />
+          <stop offset="1" stop-color="rgba(255,255,255,0)" />
+        </radialGradient>
+        <linearGradient id={`${id}-skin`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color={light} />
+          <stop offset="1" stop-color="#1c1c1f" />
+        </linearGradient>
+      </defs>
+      <rect width="300" height="460" fill={`url(#${id}-bg)`} />
+      <g opacity="0.25" stroke="#fff" stroke-width="1">
+        {Array.from({ length: 9 }, (_, i) => <line x1={20 + i * 33} y1="0" x2={20 + i * 33} y2="460" />)}
+      </g>
+      <rect width="300" height="460" fill={`url(#${id}-glow)`} />
+      <path d="M40 460 C48 372 92 342 150 338 C208 342 252 372 260 460 Z" fill={`url(#${id}-skin)`} />
+      <rect x="128" y="270" width="44" height="80" rx="18" fill={`url(#${id}-skin)`} />
+      <ellipse cx="150" cy="215" rx="62" ry="78" fill={`url(#${id}-skin)`} />
+      <path d="M88 200 C86 140 120 120 150 120 C190 120 216 142 212 200 C200 168 176 158 150 158 C122 158 100 170 88 200 Z" fill="#141416" />
+    </svg>
+  )
+}

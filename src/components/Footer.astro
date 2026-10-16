@@ -1,0 +1,67 @@
+---
+import Scene from './Scene.astro';
+import { contact } from '../data/site';
+---
+
+<footer id="contact" data-footer class="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden">
+  <!-- Photo that follows the cursor while a link is hovered (desktop) -->
+  <div class="pointer-events-none absolute inset-0 z-[100] hidden h-full w-full items-center justify-center md:flex">
+    <div data-footer-photo class="absolute flex h-[250px] w-[200px] items-center justify-center opacity-0 transition-opacity duration-300 ease-in-out-cubic">
+      {contact.links.map((l) => <Scene scene={l.scene} class="absolute inset-0 hidden h-full w-full" data-photo-for={l.key} />)}
+    </div>
+  </div>
+
+  <div class="relative z-[102] mb-[50px] flex h-[26px] w-full flex-col items-center justify-start">
+    <p data-footer-label class="label absolute flex leading-[26px]">{contact.label}</p>
+  </div>
+
+  {
+    contact.links.map((l) => (
+      <div class="relative z-[99] flex items-center justify-center transition-all duration-300 ease-in-out-cubic">
+        <a
+          href={l.href}
+          data-footer-link={l.key}
+          data-hover={l.hover}
+          class="font-display flex items-center justify-center px-[100px] py-2.5 text-center text-[18vw] leading-none text-mist md:py-5 md:text-[15vw] lg:text-[6vw]"
+        >
+          {l.label}
+        </a>
+      </div>
+    ))
+  }
+
+  <div class="absolute inset-x-0 bottom-0 z-[999] flex h-[100px] items-center justify-between px-0 sm:px-[15px] md:px-[35px]">
+    <span class="label p-[15px]">{contact.wink}</span>
+    <a href="#top" class="label p-[15px]">{contact.top}</a>
+  </div>
+</footer>
+
+<script>
+  import { mouseTimeline } from '../scripts/ix';
+  import { contact } from '../data/site';
+
+  const footer = document.querySelector<HTMLElement>('[data-footer]')!;
+  const photo = footer.querySelector<HTMLElement>('[data-footer-photo]')!;
+  const label = footer.querySelector<HTMLElement>('[data-footer-label]')!;
+
+  mouseTimeline(
+    footer,
+    { smoothing: 91, media: '(min-width: 768px)' },
+    [['[data-footer-photo]', 'x', [[0, -50], [100, 50]], 'vw'], ['[data-footer-photo]', 'rz', [[0, -10], [100, 10]]]],
+    [['[data-footer-photo]', 'y', [[0, -50], [100, 50]], 'vh']],
+  );
+
+  footer.querySelectorAll<HTMLElement>('[data-footer-link]').forEach((link) => {
+    link.addEventListener('mouseenter', () => {
+      footer.querySelectorAll<HTMLElement>('[data-photo-for]').forEach((img) => {
+        img.style.display = img.dataset.photoFor === link.dataset.footerLink ? 'block' : 'none';
+      });
+      photo.style.opacity = '1';
+      label.textContent = link.dataset.hover ?? contact.label;
+    });
+    link.addEventListener('mouseleave', () => {
+      photo.style.opacity = '0';
+      label.textContent = contact.label;
+    });
+  });
+</script>

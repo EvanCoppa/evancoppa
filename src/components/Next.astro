@@ -1,0 +1,13 @@
+---
+import Copy from './Copy.astro';
+import { breaks } from '../data/site';
+---
+
+<section class="relative mx-auto flex max-w-[1800px] flex-col items-center justify-center pt-[20vh] pb-[10vh]">
+  <div class="relative my-[50px] flex w-full flex-col items-center justify-center text-center md:w-[65vw] lg:w-[50vw]">
+    <h2 class="font-display relative text-[18vw] leading-none text-mist sm:text-[14vw] lg:text-[6vw]">
+      {breaks.next.title[0]}<br />{breaks.next.title[1]}
+    </h2>
+  </div>
+  <Copy paragraphs={[breaks.next.text]} tight />
+</section>

@@ -1,0 +1,147 @@
+---
+// A CSS-3D laptop whose lid opens with scroll, plus three hover hotspots
+// that grow into detail "lenses".
+const points = [
+  { n: 1, pos: 'left-[-25%] top-[19%] md:left-[-17%] md:top-[17%]', label: 'Keyboard' },
+  { n: 2, pos: 'left-[14%] top-[27%] md:left-[8%] md:top-[25%]', label: 'Trackpad' },
+  { n: 3, pos: 'top-[42%] md:top-[40%]', label: 'Ports' },
+];
+---
+
+<div class="relative flex h-full w-full flex-col items-center justify-start md:absolute md:inset-y-0 md:right-0 md:block md:w-[65%]">
+  <div class="sticky top-0 flex h-screen w-full flex-col items-center justify-around overflow-hidden perspective-[1000px]">
+    <div data-laptop class="relative flex h-[416px] w-[133%] items-center justify-center sm:w-full">
+      <div class="laptop-stage">
+        <div class="laptop-rig preserve-3d">
+          <div class="laptop-base preserve-3d">
+            <div class="laptop-keys" aria-hidden="true">{Array.from({ length: 60 }, () => <span />)}</div>
+            <div class="laptop-pad"></div>
+            <div data-lid class="laptop-lid preserve-3d">
+              <div class="laptop-screen backface-hidden">
+                <div data-screen class="laptop-wallpaper"></div>
+              </div>
+              <div class="laptop-back backface-hidden"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {
+        points.map((p) => (
+          <div data-hotspots class="pointer-events-none absolute inset-0 hidden h-full w-full items-center justify-center opacity-0 md:flex">
+            <div class:list={['group/pt pointer-events-auto relative flex size-[50px] cursor-pointer items-center justify-center perspective-[1200px]', p.pos]}>
+              <span class="absolute size-[30px] rounded-[15px] border border-white motion-safe:animate-pulse-ring"></span>
+              <div data-lens class="lens absolute flex size-2.5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white transition-[width,height] duration-400 ease-[cubic-bezier(0.785,0.135,0.15,0.86)] group-hover/pt:size-[300px]">
+                <div class:list={['lens-detail absolute inset-0 rounded-full opacity-0 transition-opacity duration-400 group-hover/pt:opacity-100', `lens-${p.n}`]}>
+                  <span class="absolute inset-x-0 bottom-[18%] text-center text-[10px] font-medium tracking-[2px] text-white/80 uppercase">{p.label}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .laptop-stage {
+    perspective: 1100px;
+    transform: translateY(125px) scale(var(--laptop-scale, 1));
+  }
+  @media (max-width: 767px) {
+    .laptop-stage { --laptop-scale: 0.7; }
+  }
+  .laptop-rig {
+    transform: rotateX(74deg);
+  }
+  .laptop-base {
+    position: relative;
+    width: 520px;
+    height: 340px;
+    border-radius: 18px 18px 26px 26px;
+    background: linear-gradient(180deg, #5b5c62, #3a3b40 60%, #26272b);
+    box-shadow: 0 60px 80px -20px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .laptop-keys {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    right: 40px;
+    height: 130px;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 4px;
+  }
+  .laptop-keys span {
+    border-radius: 3px;
+    background: #121316;
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+  }
+  .laptop-pad {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    width: 200px;
+    height: 120px;
+    margin-left: -100px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #3a3b40, #303136);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+  }
+  .laptop-lid {
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    width: 520px;
+    height: 330px;
+    transform-origin: 50% 100%;
+    transform: rotateX(-180deg);
+  }
+  .laptop-screen,
+  .laptop-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px 16px 4px 4px;
+  }
+  .laptop-screen {
+    padding: 12px 12px 18px;
+    background: #0a0a0c;
+    box-shadow: inset 0 0 0 2px #3c3d42;
+  }
+  .laptop-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(180deg, #55565c, #35363b);
+  }
+  .laptop-wallpaper {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    background:
+      radial-gradient(40% 50% at 25% 35%, #ff5fa2, transparent 70%),
+      radial-gradient(45% 55% at 70% 30%, #ffd14a, transparent 70%),
+      radial-gradient(50% 60% at 55% 80%, #3fa7ff, transparent 70%),
+      radial-gradient(40% 40% at 85% 75%, #7cf0c5, transparent 70%),
+      #f6a04d;
+    opacity: 0;
+  }
+  .lens-1 { background: repeating-linear-gradient(90deg, #111 0 26px, #2a2b30 26px 30px), repeating-linear-gradient(0deg, transparent 0 26px, #2a2b30 26px 30px), #111; background-blend-mode: lighten; }
+  .lens-2 { background: radial-gradient(60% 50% at 50% 40%, #44454b, #2a2b30 70%); }
+  .lens-3 { background: linear-gradient(180deg, #3d3e44 0 45%, #18191c 45% 55%, #3d3e44 55%), radial-gradient(circle at 30% 50%, #000 8%, transparent 9%); }
+</style>
+
+<script>
+  import { scrollTimeline, mouseTimeline } from '../../scripts/ix';
+
+  const sub = document.querySelector<HTMLElement>('[data-sub="3d"]')!;
+  // Lid opens over 0–90% of progress; screen lights up; hotspots fade in at the end.
+  scrollTimeline(sub, { startsEntering: false, startsExiting: true, endOffset: 50, smoothing: 50 }, [
+    ['[data-lid]', 'rx', [[0, -180], [12, -135], [35, -95], [90, -78]]],
+    ['[data-screen]', 'o', [[0, 0], [15, 1]]],
+    ['[data-hotspots]', 'o', [[85, 0], [90, 1]]],
+  ]);
+  // Hovered lens tilts toward the cursor.
+  sub.querySelectorAll<HTMLElement>('[data-lens]').forEach((lens) =>
+    mouseTimeline(lens, { smoothing: 80 }, [['&', 'ry', [[0, -20], [100, 20]]]], [['&', 'rx', [[0, 20], [100, -20]]]]),
+  );
+</script>
